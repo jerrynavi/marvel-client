@@ -1,0 +1,7 @@
+{
+  "name": "marvel-client",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
