@@ -1,24 +1,50 @@
-import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import React, { useState } from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, useIonViewWillEnter } from '@ionic/react';
 import './Tab2.css';
+import { Comic } from '../interfaces/comic';
+import { getFavourites } from '../util';
+import ComicCard from '../components/ComicCard';
 
 const Tab2: React.FC = () => {
+
+  const [comics, setComics] = useState(null as Comic[] | null);
+
+  const loadComics = (): void => {
+    getFavourites().then((result) => {
+      if (result) {
+        setComics(result);
+      }
+    })
+  };
+
+  useIonViewWillEnter(() => {
+    loadComics();
+  });
+
   return (
     <IonPage>
+
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 2</IonTitle>
+          <IonTitle>Favourites</IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 2</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 2 page" />
+
+        {(comics) && (
+          <IonGrid>
+            <IonRow>
+              {comics.map((comic) => (
+                <IonCol key={comic.id} sizeXs="12" sizeSm="6" sizeMd="4" sizeLg="3" sizeXl="2">
+                  <ComicCard comic={comic} />
+                </IonCol>
+              ))}
+            </IonRow>
+          </IonGrid>
+        )}
       </IonContent>
+
     </IonPage>
   );
 };
